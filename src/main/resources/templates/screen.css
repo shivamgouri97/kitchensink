@@ -1,0 +1,106 @@
+/* Core styles for the page */
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #F1F1F1;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    font-size: 0.8em;
+    color: #363636;
+}
+
+#container {
+    margin: 0 auto;
+    padding: 0 20px 10px 20px;
+    border-top: 5px solid #000000;
+    border-left: 5px solid #8c8f91;
+    border-right: 5px solid #8c8f91;
+    border-bottom: 25px solid #8c8f91;
+    width: 865px; /* subtract 40px from banner width for padding */
+    background: #FFFFFF;
+    padding-top: 30px;
+    box-shadow: 3px 3px 15px #d5d5d5;
+}
+
+h1 {
+    color: #243446;
+    font-size: 2.25em;
+}
+
+h2 {
+    font-size: 1em;
+}
+
+.error-message {
+    color: red;
+    font-size: 0.9em;
+    margin-left: 10px; /* Adjust this value for spacing between the input and error */
+}
+
+form {
+    padding: 1em;
+    font: 80%/1 sans-serif;
+    width: 375px;
+    border: 1px solid #D5D5D5;
+}
+
+label {
+    display: inline-block;
+    width: 100px; /* Adjust width based on your design */
+    text-align: right;
+    margin-right: 10px;
+}
+
+input {
+    display: inline-block;
+    margin-bottom: 8px;
+}
+
+button {
+    margin-left: 110px; /* Adjust this value to align with the input fields */
+}
+
+/* Table styles */
+.simpletablestyle {
+    background-color: #E6E7E8;
+    clear: both;
+    width: 550px;
+    border-collapse: collapse;
+}
+
+.simpletablestyle th, .simpletablestyle td {
+    padding: 5px;
+    border: 1px solid #d5d5d5;
+}
+
+.simpletablestyle th {
+    background-color: black;
+    color: white;
+}
+
+.simpletablestyle tr:nth-child(odd) {
+    background-color: #f4f3f3;
+}
+
+.simpletablestyle tr:nth-child(even) {
+    background-color: #ffffff;
+}
+
+.simpletablestyle a {
+    color: #4a5d75;
+    text-decoration: none;
+}
+
+.simpletablestyle a:hover {
+    color: #369;
+    text-decoration: underline;
+}
+
+.simpletablestyle tfoot {
+    background-color: #EAECEE;
+    text-align: center;
+}
+
+.simpletablestyle thead {
+    background: black;
+    color: white;
+}

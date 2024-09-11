@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>kitchensink</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/screen.css}" />
+</head>
+<body>
+<div id="container" th:fragment="content">
+    <div class="dualbrand">
+        <img th:src="@{/images/rhjb_eap_logo.png}" width="300" height="175" />
+    </div>
+    <div id="content" th:replace="~{${content}}">
+        <!-- Template content will be inserted here -->
+    </div>
+    <div id="aside">
+        <p>Learn more about Red Hat JBoss Enterprise Application Platform.</p>
+        <ul>
+            <li><a th:href="@{https://access.redhat.com/documentation/en/red-hat-jboss-enterprise-application-platform/}">Documentation</a></li>
+            <li><a th:href="@{http://www.redhat.com/en/technologies/jboss-middleware/application-platform}">Product Information</a></li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>

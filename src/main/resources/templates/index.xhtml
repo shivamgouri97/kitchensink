@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Kitchensink</title>
+    <meta charset="UTF-8"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/screen.css}"/>
+</head>
+<body>
+<div id="container">
+    <h1>Welcome to Spring Boot Application!</h1>
+    <p>You have successfully deployed kitchensink as a Spring Boot application.</p>
+
+    <form th:action="@{/members}" th:object="${newMember}" method="post">
+        <div>
+            <label for="name">Name:</label>
+            <input type="text" id="name" th:field="*{name}"/>
+            <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="error-message">Name Error</div>
+        </div>
+
+        <div>
+            <label for="email">Email:</label>
+            <input type="text" id="email" th:field="*{email}"/>
+            <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="error-message">Email Error</div>
+        </div>
+
+        <div>
+            <label for="phoneNumber">Phone Number:</label>
+            <input type="text" id="phoneNumber" th:field="*{phoneNumber}"/>
+            <div th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}" class="error-message">Phone Number Error</div>
+        </div>
+
+        <div>
+            <button type="submit">Register</button>
+        </div>
+    </form>
+
+    <h2>Members</h2>
+    <div th:if="${#lists.isEmpty(members)}">
+        <em>No registered members.</em>
+    </div>
+
+    <table th:if="${not #lists.isEmpty(members)}" class="simpletablestyle">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone #</th>
+            <th>REST URL</th>
+            <th>Remove Entry</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="member : ${members}">
+            <td th:text="${member.id}">Id</td>
+            <td th:text="${member.name}">Name</td>
+            <td th:text="${member.email}">Email</td>
+            <td th:text="${member.phoneNumber}">Phone Number</td>
+            <td>
+                <a th:href="'/kitchensink/rest/members/' + ${member.id}" th:text="'/rest/members/' + ${member.id}"></a>
+            </td>
+            <td>
+                <form th:action="@{'/members/' + ${member.id} + '/delete'}" method="post">
+                    <button type="submit">Remove</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="5">
+                REST URL for all members: <a th:href="@{/rest/members}">/rest/members</a>
+            </td>
+        </tr>
+        </tfoot>
+    </table>
+</div>
+</body>
+</html>

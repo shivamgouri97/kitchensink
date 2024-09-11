@@ -1,0 +1,24 @@
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: health
+server:
+  port: 8081
+  servlet:
+    context-path: /kitchensink
+spring:
+  application:
+    name: kitchensink
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/testdb
+  thymeleaf:
+    check-template-location: true
+    prefix: classpath:/templates/
+    suffix: .xhtml
+
+#http://localhost:8081/kitchensink/swagger-ui/index.html#/
