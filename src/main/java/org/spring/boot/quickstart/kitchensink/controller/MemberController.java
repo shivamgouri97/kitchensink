@@ -2,7 +2,7 @@ package org.spring.boot.quickstart.kitchensink.controller;
 
 
 import jakarta.validation.Valid;
-import jakarta.validation.ValidationException;
+import org.spring.boot.quickstart.kitchensink.exception.CustomValidationException;
 import org.spring.boot.quickstart.kitchensink.model.Member;
 import org.spring.boot.quickstart.kitchensink.service.MemberRegistration;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +26,10 @@ public class MemberController {
     @Autowired
     private MemberResourceRestController restService;
 
+    /**
+     * @param model
+     * @return
+     */
 
     @GetMapping("/index")
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
@@ -37,17 +41,23 @@ public class MemberController {
         return "index";
     }
 
+    /**
+     * @param member
+     * @param result
+     * @param model
+     * @return
+     */
     @PostMapping("/members")
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public String addMember(@Valid @ModelAttribute("newMember") Member member, BindingResult result, Model model) {
+        model.addAttribute("members", restService.listAllMembers());
         if (result.hasErrors()) {
-            // If there are validation errors, return to the form with error messages
-            model.addAttribute("members", restService.listAllMembers());
             return "index";
         }
         try {
             restService.createMember(member);
-        } catch (ValidationException e) {
+
+        } catch (CustomValidationException e) {
             model.addAttribute("errorMessage", "Email is already taken. Please choose a different email.");
             return "index";
         } catch (Exception e) {
@@ -58,13 +68,21 @@ public class MemberController {
         return "redirect:/index";
     }
 
-
+    /**
+     * @param id
+     * @return
+     */
     @PostMapping("/members/{id}/delete")
     @PreAuthorize("hasRole('ADMIN')")
     public String deleteMember(@PathVariable Long id) {
         restService.deleteMember(id);
         return "redirect:/index";
     }
+
+    /**
+     * @param model
+     * @return
+     */
 
     @GetMapping("/default")
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")

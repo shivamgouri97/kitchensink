@@ -1,7 +1,6 @@
 package org.spring.boot.quickstart.kitchensink.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.spring.boot.quickstart.kitchensink.data.MemberRepository;
 import org.spring.boot.quickstart.kitchensink.model.Member;
 import org.spring.boot.quickstart.kitchensink.utility.IdGenerator;
@@ -12,10 +11,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 public class MemberRegistration {
 
-    private static final Logger log = LoggerFactory.getLogger(MemberRegistration.class);
 
     @Autowired
     private MemberRepository repository;
@@ -26,15 +25,16 @@ public class MemberRegistration {
     @Autowired
     private ApplicationEventPublisher applicationEventPublisher;
 
-    public void register(Member member) {
-        log.info("Registering " + member.getName());
+    public Member register(Member member) {
+        log.info("Registering {}", member.getName());
         member.setId(idGenerator.getNextId());
-        repository.save(member);
+        Member result = repository.save(member);
         applicationEventPublisher.publishEvent(member);
+        return result;
     }
 
     public void deleteById(Long id) {
-        log.info("Deleting member with " + id);
+        log.info("Deleting member with {}", id);
         repository.deleteById(id);
     }
 

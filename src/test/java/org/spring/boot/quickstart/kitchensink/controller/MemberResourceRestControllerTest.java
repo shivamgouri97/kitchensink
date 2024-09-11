@@ -8,6 +8,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import org.spring.boot.quickstart.kitchensink.data.MemberRepository;
+import org.spring.boot.quickstart.kitchensink.exception.MemberNotFoundException;
 import org.spring.boot.quickstart.kitchensink.model.Member;
 import org.spring.boot.quickstart.kitchensink.service.MemberRegistration;
 import org.springframework.data.domain.Sort;
@@ -16,13 +17,10 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 class MemberResourceRestControllerTest {
 
@@ -45,14 +43,14 @@ class MemberResourceRestControllerTest {
 
     @Test
     void testListAllMembers() {
-        Member expectedMember = new Member(1L, "John", "john@gmail.com", "9898989898");
-        when(repository.findAllOrderedByName(Sort.by(Sort.Order.asc("name")))).thenReturn(List.of(expectedMember));
+        Member expectedMember = new Member(1L, "John", "john@gmail.com", "1234567890");
+        when(repository.findAllOrderedByName(Sort.by(Sort.Order.asc("id")))).thenReturn(List.of(expectedMember));
         List<Member> response = memberResourceRestController.listAllMembers();
 
         assertNotNull(response, "Response should not be null");
         assertEquals(1, response.size(), "Response size should be 1");
 
-        Member actualMember = response.getFirst();
+        Member actualMember = response.get(0);
         assertEquals(expectedMember.getId(), actualMember.getId(), "Member ID should match");
         assertEquals(expectedMember.getName(), actualMember.getName(), "Member name should match");
         assertEquals(expectedMember.getEmail(), actualMember.getEmail(), "Member email should match");
@@ -70,44 +68,71 @@ class MemberResourceRestControllerTest {
         assertEquals(expectedMember, response.getBody(), "Response body should match the expected member");
     }
     @Test
-    void testLookupMemberByIdNotFound() {
-        when(repository.findById(1L)).thenReturn(Optional.empty());
+    void lookupMemberById_ReturnsMember_WhenFound() {
+        // Arrange
+        long memberId = 1L;
+        Member mockMember = new Member();
+        mockMember.setId(memberId);
+        mockMember.setName("John Doe");
+        when(repository.findById(memberId)).thenReturn(Optional.of(mockMember));
 
-        ResponseEntity<Member> response = memberResourceRestController.lookupMemberById(1L);
+        ResponseEntity<Member> response = memberResourceRestController.lookupMemberById(memberId);
 
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode(), "Status code should be NOT FOUND");
+        assertNotNull(response);
+        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(mockMember, response.getBody());
+        verify(repository, times(1)).findById(memberId);
     }
 
     @Test
-    void testCreateMemberSuccess() {
+    void lookupMemberById_ThrowsException_WhenNotFound() {
+
+        long memberId = 1L;
+        when(repository.findById(memberId)).thenReturn(Optional.empty());
+
+        MemberNotFoundException exception = assertThrows(MemberNotFoundException.class, () -> {
+            memberResourceRestController.lookupMemberById(memberId);
+        });
+
+        assertEquals("Member not found with id: " + memberId, exception.getMessage());
+        verify(repository, times(1)).findById(memberId);
+    }
+
+
+    @Test
+    void testCreateMemberSuccess() throws Exception {
         Member newMember = new Member(1L, "John", "john@gmail.com", "9898989898");
         when(validator.validate(newMember)).thenReturn(new HashSet<>());
 
-        ResponseEntity<Map<String, String>> response = memberResourceRestController.createMember(newMember);
+        ResponseEntity<Member> member = memberResourceRestController.createMember(newMember);
 
-        assertEquals(HttpStatus.CREATED, response.getStatusCode(), "Status code should be CREATED");
+        assertEquals(HttpStatus.CREATED, member.getStatusCode(), "Status code should be CREATED");
     }
 
     @Test
-    void testCreateMemberValidationException() {
+    void testCreateMemberValidationException() throws Exception {
         Member newMember = new Member(1L, "John", "john@gmail.com", "9898989898");
         when(validator.validate(newMember)).thenReturn(new HashSet<>());
         when(repository.findByEmail(newMember.getEmail())).thenReturn(Optional.of(newMember));
 
-        ResponseEntity<Map<String, String>> response = memberResourceRestController.createMember(newMember);
 
-        assertEquals(HttpStatus.CONFLICT, response.getStatusCode(), "Status code should be CONFLICT");
+        assertThrows(Exception.class, () -> {
+            memberResourceRestController.createMember(newMember);
+        });
+
     }
 
     @Test
-    void testCreateMemberException() {
+    void testCreateMemberException() throws Exception {
         Member newMember = new Member(1L, "John", "john@gmail.com", "9898989898");
         when(validator.validate(newMember)).thenReturn(new HashSet<>());
         when(repository.findByEmail(newMember.getEmail())).thenReturn(Optional.empty());
         doThrow(new RuntimeException("Error")).when(registration).register(newMember);
 
-        ResponseEntity<Map<String, String>> response = memberResourceRestController.createMember(newMember);
+        assertThrows(Exception.class, () -> {
+            memberResourceRestController.createMember(newMember);
+        });
 
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(), "Status code should be BAD REQUEST");
+
     }
 }

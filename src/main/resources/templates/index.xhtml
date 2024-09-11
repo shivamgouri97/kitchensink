@@ -19,14 +19,17 @@
 
         <div>
             <label for="email">Email:</label>
-            <input type="text" id="email" th:field="*{email}"/>
+            <input type="email" id="email" th:field="*{email}"/>
             <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="error-message">Email Error</div>
+            <div th:if="${errorMessage != null}"><p th:text="${errorMessage}" style="color: red;"></p></div>
         </div>
 
         <div>
             <label for="phoneNumber">Phone Number:</label>
             <input type="text" id="phoneNumber" th:field="*{phoneNumber}"/>
-            <div th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}" class="error-message">Phone Number Error</div>
+            <div th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}" class="error-message">Phone
+                Number Error
+            </div>
         </div>
 
         <div>

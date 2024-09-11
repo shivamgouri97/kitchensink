@@ -16,7 +16,7 @@ public interface MemberRepository extends MongoRepository<Member, Long> {
 
     @Query("{ 'email': ?0 }")
     Optional<Member> findByEmail(String email);
-//
+
     @Query("SELECT m FROM Member m ORDER BY m.name ASC")
     List<Member> findAllOrderedByName(Sort sort);
 }
