@@ -162,3 +162,14 @@ APIs are secured through Basic Authentication.
 
 ### Accessible by ADMIN Role Only:
 1. Delete Member by ID
+
+### Swagger Endpoints
+
+1. http://localhost:8081/kitchensink/v3/api-docs/public
+2. http://localhost:8081/kitchensink/swagger-ui/index.html
+
+### Actuator Endpoints
+
+1. http://localhost:8081/kitchensink/actuator/health
+2. 
+
