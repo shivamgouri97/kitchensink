@@ -156,11 +156,9 @@ curl --location --request DELETE 'http://localhost:8081/kitchensink/rest/members
 APIs are secured through Basic Authentication.
 
 ## Default users
-username: user
-password: user
+1. username: **user** and password: **user**
 
-username: admin
-password : admin
+2. username: **admin** and password : **admin**
 
 ### Accessible by USER and ADMIN Roles:
 1. Add New Member
