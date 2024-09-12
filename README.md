@@ -168,8 +168,8 @@ APIs are secured through Basic Authentication.
 1. http://localhost:8081/kitchensink/v3/api-docs/public
 2. http://localhost:8081/kitchensink/swagger-ui/index.html
 
-### Actuator Endpoints
+### Actuator Endpoint
 
 1. http://localhost:8081/kitchensink/actuator/health
-2. 
+  
 
